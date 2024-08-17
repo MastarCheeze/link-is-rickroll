@@ -72,14 +72,14 @@ function updateBadge(activated) {
     }
 }
 
-// fallback for chrome:// urls
+// edge case for chrome:// urls
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     chrome.storage.sync.get(
         ["redirectLink", "urlMatchPatterns", "activated"],
         (result) => {
             if (result.activated) {
                 for (pattern of result.urlMatchPatterns) {
-                    if (pattern.startsWith("chrome://") && changeInfo.url === pattern) {
+                    if (pattern.startsWith("chrome://") && changeInfo.url.includes(pattern)) {
                         chrome.tabs.update(null, { url: result.redirectLink });
                         break;
                     }
